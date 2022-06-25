@@ -39,6 +39,10 @@ wss.on('connection', function connection(ws) {
         xOffset = Number(coordsOffsets[0])
         robot.moveMouse(mouse.x - xOffset, mouse.y)
         break
+      case 'mouse_right':
+        xOffset = Number(coordsOffsets[0])
+        robot.moveMouse(mouse.x + xOffset, mouse.y)
+        break
     }
 
     // wss.send('mouse_position 125px,125px')
