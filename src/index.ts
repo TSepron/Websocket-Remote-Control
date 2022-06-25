@@ -6,6 +6,7 @@ import {
 } from 'ws'
 import { drawCircle } from './drawing/drawCircle'
 import { drawRectangle } from './drawing/drawRectangle'
+import { drawSquare } from './drawing/drawSquare'
 
 const wss = new WebSocketServer({ port: 8080 })
 
@@ -55,6 +56,10 @@ wss.on('connection', function connection(ws) {
         width = Number(args[0])
         length = Number(args[1])
         drawRectangle(width, length)
+        break
+      case 'draw_square':
+        width = Number(args[0])
+        drawSquare(width)
         break
     }
 
