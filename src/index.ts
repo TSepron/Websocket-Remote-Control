@@ -24,10 +24,16 @@ wss.on('connection', function connection(ws) {
     const mouse = robot.getMousePos();
     console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
     
+    let yOffset, xOffset
+    
     switch (command) {
       case 'mouse_up':
-        const yOffset = Number(coordsOffsets[0])
+        yOffset = Number(coordsOffsets[0])
         robot.moveMouse(mouse.x, mouse.y - yOffset)
+        break
+      case 'mouse_down':
+        yOffset = Number(coordsOffsets[0])
+        robot.moveMouse(mouse.x, mouse.y + yOffset)
         break
     }
 
