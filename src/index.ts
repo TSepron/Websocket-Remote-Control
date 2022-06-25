@@ -5,6 +5,7 @@ import {
   AddressInfo 
 } from 'ws'
 import { drawCircle } from './drawing/drawCircle'
+import { drawRectangle } from './drawing/drawRectangle'
 
 const wss = new WebSocketServer({ port: 8080 })
 
@@ -24,7 +25,7 @@ wss.on('connection', function connection(ws) {
     const mouse = robot.getMousePos();
     console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
     
-    let yOffset, xOffset, radius
+    let yOffset, xOffset, radius, width, length
 
     switch (command) {
       case 'mouse_up':
@@ -49,6 +50,11 @@ wss.on('connection', function connection(ws) {
       case 'draw_circle':
         radius = Number(args[0])
         drawCircle(radius)
+        break
+      case 'draw_rectangle':
+        width = Number(args[0])
+        length = Number(args[1])
+        drawRectangle(width, length)
         break
     }
 

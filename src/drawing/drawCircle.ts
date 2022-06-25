@@ -10,7 +10,7 @@ const drawCircle = async (radius: number) => {
   let isNeedToFinish = false
 
   // finish if something went wrong
-  setTimeout(() => isNeedToFinish = true, 10000)
+  const timerId = setTimeout(() => isNeedToFinish = true, 10000)
 
   for (let i = 0; i <= Math.PI * 2.04; i += 0.01) {
     // Convert polar coordinates to cartesian
@@ -29,6 +29,7 @@ const drawCircle = async (radius: number) => {
     })
   }
 
+  clearTimeout(timerId)
   drawCircle.isStarted = false
 }
 
