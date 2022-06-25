@@ -26,8 +26,13 @@ wss.on('connection', function connection(ws) {
     const mouse = robot.getMousePos();
     console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
     
-    let yOffset, xOffset, radius, width, length
+    let yOffset: number, 
+      xOffset: number, 
+      radius: number, 
+      width: number, 
+      length: number
 
+    // navigation
     switch (command) {
       case 'mouse_up':
         yOffset = Number(args[0])
@@ -45,8 +50,11 @@ wss.on('connection', function connection(ws) {
         xOffset = Number(args[0])
         robot.moveMouse(mouse.x + xOffset, mouse.y)
         break
+      case 'mouse_position':
+        return ws.send(`mouse_position ${mouse.x}px,${mouse.y}px`)
     }
 
+    // drawing
     switch (command) {
       case 'draw_circle':
         radius = Number(args[0])
@@ -63,13 +71,9 @@ wss.on('connection', function connection(ws) {
         break
     }
 
-    // wss.send('mouse_position 125px,125px')
+    // send received command back
     ws.send(data)
   })
-
-  
-
-
 })
 
 
