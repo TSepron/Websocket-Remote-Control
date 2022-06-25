@@ -1,15 +1,17 @@
 import robot from 'robotjs'
 import { 
   WebSocketServer, 
-  createWebSocketStream, 
-  AddressInfo 
+  createWebSocketStream
 } from 'ws'
 import { drawCircle } from './drawing/drawCircle'
 import { drawRectangle } from './drawing/drawRectangle'
 import { drawSquare } from './drawing/drawSquare'
+import { getMousePosition } from './navigation/getMousePosition'
+import { moveMouseHorizontally } from './navigation/moveMouseHorizontally'
+import { moveMouseVertically } from './navigation/moveMouseVertically'
+
 
 const wss = new WebSocketServer({ port: 8080 })
-
 
 wss.on('connection', function connection(ws) {
   const duplex = createWebSocketStream(ws, {
@@ -23,7 +25,7 @@ wss.on('connection', function connection(ws) {
 
     const [command, ...args] = data.split(' ')
 
-    const mouse = robot.getMousePos();
+    const mouse = robot.getMousePos()
     console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
     
     let yOffset: number, 
@@ -36,22 +38,22 @@ wss.on('connection', function connection(ws) {
     switch (command) {
       case 'mouse_up':
         yOffset = Number(args[0])
-        robot.moveMouse(mouse.x, mouse.y - yOffset)
+        moveMouseVertically(-yOffset)
         break
       case 'mouse_down':
         yOffset = Number(args[0])
-        robot.moveMouse(mouse.x, mouse.y + yOffset)
+        moveMouseVertically(yOffset)
         break
       case 'mouse_left':
         xOffset = Number(args[0])
-        robot.moveMouse(mouse.x - xOffset, mouse.y)
+        moveMouseHorizontally(-xOffset)
         break
       case 'mouse_right':
         xOffset = Number(args[0])
-        robot.moveMouse(mouse.x + xOffset, mouse.y)
+        moveMouseHorizontally(xOffset)
         break
       case 'mouse_position':
-        return ws.send(`mouse_position ${mouse.x}px,${mouse.y}px`)
+        return ws.send(getMousePosition())
     }
 
     // drawing
