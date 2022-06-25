@@ -25,7 +25,7 @@ wss.on('connection', function connection(ws) {
     console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
     
     let yOffset, xOffset
-    
+
     switch (command) {
       case 'mouse_up':
         yOffset = Number(coordsOffsets[0])
@@ -34,6 +34,10 @@ wss.on('connection', function connection(ws) {
       case 'mouse_down':
         yOffset = Number(coordsOffsets[0])
         robot.moveMouse(mouse.x, mouse.y + yOffset)
+        break
+      case 'mouse_left':
+        xOffset = Number(coordsOffsets[0])
+        robot.moveMouse(mouse.x - xOffset, mouse.y)
         break
     }
 
