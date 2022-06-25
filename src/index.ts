@@ -1,3 +1,5 @@
+import robot from 'robotjs'
+
 import { 
   WebSocketServer, 
   createWebSocketStream, 
@@ -16,6 +18,19 @@ wss.on('connection', function connection(ws) {
 
     const data = chunk.toString()
     console.log(data)
+
+    const [command, ...coordsOffsets] = data.split(' ')
+
+    const mouse = robot.getMousePos();
+    console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
+    
+    switch (command) {
+      case 'mouse_up':
+        const yOffset = Number(coordsOffsets[0])
+        robot.moveMouse(mouse.x, mouse.y - yOffset)
+        break
+    }
+
     // wss.send('mouse_position 125px,125px')
     ws.send(data)
   })

@@ -18,6 +18,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "robotjs": "^0.6.0",
     "ws": "^8.8.0"
   }
 }
