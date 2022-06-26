@@ -9,13 +9,16 @@ import { drawSquare } from './drawing/drawSquare'
 import { getMousePosition } from './navigation/getMousePosition'
 import { moveMouseHorizontally } from './navigation/moveMouseHorizontally'
 import { moveMouseVertically } from './navigation/moveMouseVertically'
+import { printScreen } from './print-screen/printScreen'
 
+const PORT = 8080
 
-const wss = new WebSocketServer({ port: 8080 })
+const wss = new WebSocketServer({ port: PORT })
+console.log(`WebSocket Server on port ${PORT}`)
 
 wss.on('connection', function connection(ws) {
   const duplex = createWebSocketStream(ws, {
-    allowHalfOpen: false,
+    decodeStrings: false,
   })
 
   duplex.on('data', (chunk: Buffer) => {
@@ -25,9 +28,6 @@ wss.on('connection', function connection(ws) {
 
     const [command, ...args] = data.split(' ')
 
-    const mouse = robot.getMousePos()
-    console.log("Mouse is at x:" + mouse.x + " y:" + mouse.y)
-    
     let yOffset: number, 
       xOffset: number, 
       radius: number, 
@@ -53,7 +53,7 @@ wss.on('connection', function connection(ws) {
         moveMouseHorizontally(xOffset)
         break
       case 'mouse_position':
-        return ws.send(getMousePosition())
+        return duplex.write(getMousePosition())
     }
 
     // drawing
@@ -73,8 +73,17 @@ wss.on('connection', function connection(ws) {
         break
     }
 
+    // print screen
+    if (command === 'prnt_scrn') {
+      printScreen()
+        .then(base64Str => duplex.write(`${command} ${base64Str}`))
+        .catch(err => console.log(err))
+
+      return 
+    }
+
     // send received command back
-    ws.send(data)
+    duplex.write(data)
   })
 })
 
